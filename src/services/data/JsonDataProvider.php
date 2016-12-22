@@ -43,7 +43,7 @@ class JsonDataProvider extends \yii\base\Object
 			$params
 		);
 
-		return (int) $response->getBody();
+		return intval($response->getBody());
 	}
 
 	public function get(string $path, array $query = []): array
