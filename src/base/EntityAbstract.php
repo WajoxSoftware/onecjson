@@ -9,7 +9,6 @@ abstract class EntityAbstract extends \yii\base\Object
 	abstract public function getRestIdAttribute(): string;
 	abstract public function getRestResourcePath(string $id): string;
 	abstract public function getRestResourcesPath(): string;
-	abstract public function getRestAttributeMap(string $name): string;
 
 	public function getRestId(): string
 	{
