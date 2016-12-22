@@ -63,12 +63,16 @@ class Finder extends \yii\base\Object
 	{
 		$this->getFilter()
 			 ->orWhere($where);
+
+		return $this;
 	}
 
 	public function andWhere($where): Finder
 	{
 		$this->getFilter()
 			 ->andWhere($where);
+
+		return $this;
 	}
 
 	public function one(): EntityAbstract
