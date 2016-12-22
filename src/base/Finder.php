@@ -1,6 +1,7 @@
 <?php
 namespace wajox\onecjson\base;
 
+use wajox\onecjson\base\EntityAbstract;
 use wajox\onecjson\services\entities\EntitiesManager;
 
 class Finder extends \yii\base\Object
@@ -70,7 +71,7 @@ class Finder extends \yii\base\Object
 			 ->andWhere($where);
 	}
 
-	public function one()
+	public function one(): EntityAbstract
 	{
 		$this->limit(1);
 
@@ -82,7 +83,7 @@ class Finder extends \yii\base\Object
 		return array_shift($results);
 	}	
 
-	public function all()
+	public function all(): array
 	{
 		return $this->getManager()->all(
 			$this->getResource(),
@@ -90,7 +91,7 @@ class Finder extends \yii\base\Object
 		);
 	}
 
-	public function count()
+	public function count(): int
 	{
 		return $this->getManager()->count(
 			$this->getResource(),
@@ -122,7 +123,7 @@ class Finder extends \yii\base\Object
 		return $this->resource;
 	}
 
-	protected function getQueryParams()
+	protected function getQueryParams(): array
 	{
 		$params = [
 			'$filter' => $this->getFilterString(),
