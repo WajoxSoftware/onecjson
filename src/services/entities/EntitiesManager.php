@@ -55,7 +55,7 @@ class EntitiesManager extends \yii\base\Object
 
 		$json = $this->getRestAdapter()->get($path, $query);
 		if (sizeof($json['value']) == 0) {
-			return;
+			return [];
 		}
 
 		return array_map(
