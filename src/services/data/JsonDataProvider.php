@@ -30,7 +30,7 @@ class JsonDataProvider extends \yii\base\Object
 		array $params = []
 	): int
 	{
-		$queryString = http_build_query($query);
+		$queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
 		$params['auth'] = [
 			$this->getUser(),
@@ -123,7 +123,7 @@ class JsonDataProvider extends \yii\base\Object
 	{
 		$query['$format'] = self::FORMAT_JSON;
 
-		$queryString = http_build_query($query);
+		$queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
 		$params['auth'] = [
 			$this->getUser(),
