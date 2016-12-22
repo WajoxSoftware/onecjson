@@ -1,5 +1,5 @@
 <?php
-namespace wajox\onec\services\entities;
+namespace wajox\onecjson\services\entities;
 
 use wajox\onecjson\base\Finder;
 use wajox\onecjson\base\EntityAbstract;

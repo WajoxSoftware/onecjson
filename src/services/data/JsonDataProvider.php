@@ -1,5 +1,5 @@
 <?php
-namespace wajox\onec\services\data;
+namespace wajox\onecjson\services\data;
 
 use GuzzleHttp\Client;
 
