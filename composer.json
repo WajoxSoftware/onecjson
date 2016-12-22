@@ -1,0 +1,23 @@
+{
+    "name": "wajox/onecjson",
+    "description": "json abstraction for 1c json odata",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ildar Usmanov",
+            "email": "wajox@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0.5",
+        "guzzlehttp/guzzle": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "wajox\\onecjson\\": "src/"
+        }
+    }
+}
