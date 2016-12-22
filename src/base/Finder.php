@@ -1,7 +1,7 @@
 <?php
 namespace wajox\onecjson\base;
 
-use app\services\entities\EntitiesManager;
+use wajox\onecjson\services\entities\EntitiesManager;
 
 class Finder extends \yii\base\Object
 {
