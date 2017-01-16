@@ -11,12 +11,11 @@ class EntitiesManager extends \yii\base\Object
 
 	public function __construct(array $params = [])
 	{
-		$this->setRestAdapter(
-			\Yii::createObject(
+		$this
+			->initAdapter(
 				$params['adapterClass'],
-				[$params['adapterConfig']]
-			)
-		);
+				$params['adapterConfig']
+			);
 	}
 
 	public function one(string $className, string $id)
@@ -103,4 +102,17 @@ class EntitiesManager extends \yii\base\Object
 	{
 		return $this->restAdapter;
 	}
+
+	protected function initAdapter(string $adapterClass, array $adapterConfig): EntitiesManager 
+	{
+		$adapterObject = \Yii::createObject(
+			$adapterClass,
+			[$adapterConfig]
+		);
+
+		$this->setRestAdapter($adapterObject);
+
+		return $this;
+	} 
+
 }
