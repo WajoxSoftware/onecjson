@@ -158,7 +158,7 @@ class JsonDataProvider extends \yii\base\Object
 			$this->getCachePrefix(),
 			$method,
 			$path,
-			$query
+			$query,
 			$params
 		]);
 
