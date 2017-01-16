@@ -113,7 +113,7 @@ class JsonDataProvider extends \yii\base\Object
 		return $this->password;
 	}
 
-	protected function getClient(): Client
+	public function getClient(): Client
 	{
 		return new Client([
 			'base_uri' => $this->getHost(),
