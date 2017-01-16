@@ -7,112 +7,111 @@ use wajox\onecjson\services\data\JsonDataProvider;
 
 class EntitiesManager extends \yii\base\Object
 {
-	protected $restAdapter;
+    protected $restAdapter;
 
-	public function __construct(array $params = [])
-	{
-		$this
-			->initAdapter(
-				$params['adapterClass'],
-				$params['adapterConfig']
-			);
-	}
+    public function __construct(array $params = [])
+    {
+        $this
+            ->initAdapter(
+                $params['adapterClass'],
+                $params['adapterConfig']
+            );
+    }
 
-	public function one(string $className, string $id)
-	{
-		$object = \Yii::createObject($className);
-		$path = $object->getRestResourcePath($id);
-		$json = $this->getRestAdapter()->get($path);
+    public function one(string $className, string $id)
+    {
+        $object = \Yii::createObject($className);
+        $path = $object->getRestResourcePath($id);
+        $json = $this->getRestAdapter()->get($path);
 
-		$object->setAttributes($json)
-			   ->setIsNew(false);
+        $object->setAttributes($json)
+               ->setIsNew(false);
 
-		return $object;
-	}
+        return $object;
+    }
 
-	public function finder(string $className)
-	{
-		$finder = \Yii::createObject(
-			Finder::className(),
-			[$this, $className]
-		);
+    public function finder(string $className)
+    {
+        $finder = \Yii::createObject(
+            Finder::className(),
+            [$this, $className]
+        );
 
-		return $finder;
-	}
+        return $finder;
+    }
 
-	public function count(string $className, array $query = []): int
-	{
-		$object = \Yii::createObject($className);
-		$path = $object->getRestResourcesPath();
+    public function count(string $className, array $query = []): int
+    {
+        $object = \Yii::createObject($className);
+        $path = $object->getRestResourcesPath();
 
-		return $this->getRestAdapter()->count($path, $query);
-	}
+        return $this->getRestAdapter()->count($path, $query);
+    }
 
-	public function all(string $className, array $query = []): array
-	{
-		$path = \Yii::createObject($className)->getRestResourcesPath();
+    public function all(string $className, array $query = []): array
+    {
+        $path = \Yii::createObject($className)->getRestResourcesPath();
 
-		$json = $this->getRestAdapter()->get($path, $query);
-		if (sizeof($json['value']) == 0) {
-			return [];
-		}
+        $json = $this->getRestAdapter()->get($path, $query);
+        if (sizeof($json['value']) == 0) {
+            return [];
+        }
 
-		return array_map(
-			function($attributes) use ($className) {
-				return \Yii::createObject($className)
-					->setAttributes($attributes)
-					->setIsNew(false);
-			},
-			$json['value']
-		);
-	}
+        return array_map(
+            function ($attributes) use ($className) {
+                return \Yii::createObject($className)
+                    ->setAttributes($attributes)
+                    ->setIsNew(false);
+            },
+            $json['value']
+        );
+    }
 
-	protected function persist(EntityAbstract $object): EntityAbstract
-	{
-		$params = ['json' => $object->getJson()];
-		$path = $object->getRestResourcesPath();
+    protected function persist(EntityAbstract $object): EntityAbstract
+    {
+        $params = ['json' => $object->getJson()];
+        $path = $object->getRestResourcesPath();
 
-		if ($object->getIsNew()) {
-			$json = $this->getRestAdapter()->post(
-				$path,
-				[],
-				$params
-			);
-		} else {
-			$json = $this->getRestAdapter()->patch(
-				$path,
-				[],
-				$params
-			);
-		}
+        if ($object->getIsNew()) {
+            $json = $this->getRestAdapter()->post(
+                $path,
+                [],
+                $params
+            );
+        } else {
+            $json = $this->getRestAdapter()->patch(
+                $path,
+                [],
+                $params
+            );
+        }
 
-		return $object
-			->setAttributes($json)
-			->setIsNew(false);
-	}
+        return $object
+            ->setAttributes($json)
+            ->setIsNew(false);
+    }
 
-	protected function setRestAdapter(JsonDataProvider $restAdapter): EntitiesManager
-	{
-		$this->restAdapter = $restAdapter;
+    protected function setRestAdapter(JsonDataProvider $restAdapter): EntitiesManager
+    {
+        $this->restAdapter = $restAdapter;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getRestAdapter(): JsonDataProvider
-	{
-		return $this->restAdapter;
-	}
+    public function getRestAdapter(): JsonDataProvider
+    {
+        return $this->restAdapter;
+    }
 
-	protected function initAdapter(string $adapterClass, array $adapterConfig): EntitiesManager 
-	{
-		$adapterObject = \Yii::createObject(
-			$adapterClass,
-			[$adapterConfig]
-		);
+    protected function initAdapter(string $adapterClass, array $adapterConfig): EntitiesManager
+    {
+        $adapterObject = \Yii::createObject(
+            $adapterClass,
+            [$adapterConfig]
+        );
 
-		$this->setRestAdapter($adapterObject);
+        $this->setRestAdapter($adapterObject);
 
-		return $this;
-	} 
-
+        return $this;
+    }
 }
