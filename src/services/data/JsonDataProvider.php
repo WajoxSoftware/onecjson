@@ -228,7 +228,7 @@ class JsonDataProvider extends \yii\base\Object
 
 	protected function setCachePrefix(string $cachePrefix): JsonDataProvider
 	{
-		return $this->cachePrefix = $cachePrefix;
+		$this->cachePrefix = $cachePrefix;
 
 		return $this;
 	}
