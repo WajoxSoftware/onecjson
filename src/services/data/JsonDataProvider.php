@@ -16,12 +16,18 @@ class JsonDataProvider extends \yii\base\Object
 	protected $host;
 	protected $user;
 	protected $password;
+	protected $enableCache;
+	protected $cacheTime = null;
+	protected $cachePrefix = '';
 
 	public function __construct(array $params = [])
 	{
 		$this->setHost($params['host'])
 			 ->setUser($params['user'])
-			 ->setPassword($params['password']);
+			 ->setPassword($params['password'])
+			 ->setEnableCache($params['enableCache'])
+			 ->setCacheTime($params['cacheTime'])
+			 ->setCachePrefix($params['cachePrefix']);
 	}
 
 	public function count(
@@ -46,19 +52,19 @@ class JsonDataProvider extends \yii\base\Object
 		return (int) json_decode($response->getBody());
 	}
 
-	public function get(string $path, array $query = []): array
+	public function get(string $path, array $query = [], boolean $cache = true): array
 	{
-		return $this->request(self::METHOD_GET, $path, $query);
+		return $this->request(self::METHOD_GET, $path, $query, $cache);
 	}
 
-	public function post(string $path, array $query = [], array $params = []): array
+	public function post(string $path, array $query = [], array $params = [], boolean $cache = false): array
 	{
-		return $this->request(self::METHOD_POST, $path, $query, $params);
+		return $this->request(self::METHOD_POST, $path, $query, $params, $cache);
 	}
 
-	public function patch(string $path, array $query = [], array $params = [])
+	public function patch(string $path, array $query = [], array $params = [], boolean $cache = false)
 	{
-		return $this->request(self::METHOD_PATCH, $path, $query, $params);
+		return $this->request(self::METHOD_PATCH, $path, $query, $params, $cache);
 	}
 
 	public function put(string $path, array $query = [], array $params = []): array
@@ -66,9 +72,9 @@ class JsonDataProvider extends \yii\base\Object
 		return $this->request(self::METHOD_PUT, $path, $query, $params);
 	}
 	
-	public function delete(string $path, array $query = []): array
+	public function delete(string $path, array $query = [], boolean $cache = false): array
 	{
-		return $this->request(self::METHOD_DELETE, $path, $query);
+		return $this->request(self::METHOD_DELETE, $path, $query, $cache);
 	}
 
 	protected function setHost(string $host): JsonDataProvider
@@ -118,6 +124,54 @@ class JsonDataProvider extends \yii\base\Object
 		string $method,
 		string $path,
 		array $query = [],
+		array $params = [],
+		boolean $cache = false
+	): array
+	{
+		if ($cache
+			&& $this->isCacheEnabled()
+		) {
+			return $this->requestCachedJson(
+				$method,
+				$path,
+				$query,
+				$params
+			);
+		}
+
+		return $this->requestJson(
+			$method,
+			$path,
+			$query,
+			$params
+		);
+	}
+
+	protected function requestCachedJson(
+		string $method,
+		string $path,
+		array $query = [],
+		array $params = []
+	): array
+	{
+		$key = $method
+			. $path
+			. http_build_query($query, '', '&', PHP_QUERY_RFC3986); 
+		if (!$this->getCache()->exists($key)) {
+			$this->getCache()->set(
+				$key,
+				$this->requestJson($method, $path, $query, $params),
+				$this->getCacheTime()
+			);		
+		}
+
+		return $this->getCache()->get($key);
+	}
+
+	protected function requestJson(
+		string $method,
+		string $path,
+		array $query = [],
 		array $params = []
 	): array
 	{
@@ -137,5 +191,46 @@ class JsonDataProvider extends \yii\base\Object
 		);
 
 		return json_decode($response->getBody(), true);
+	}
+
+	protected function setEnableCache(boolean $enableCache): JsonDataProvider
+	{
+		$this->enableCache = $enableCache;
+
+		return $this;
+	}
+
+	protected function isCacheEnabled(): boolean
+	{
+		return $this->enableCache;
+	}
+
+	protected function setCacheTime(integer $cacheTime): JsonDataProvider
+	{
+		$this->cacheTime = $cacheTime;
+
+		return $this;
+	}
+
+	protected function getCacheTime(): integer
+	{
+		return $this->cacheTime;
+	}
+
+	protected function getCache(): \yii\caching\Cache
+	{
+		return \Yii::$app->cache;
+	}
+
+	protected function setCachePrefix(string $cachePrefix): JsonDataProvider
+	{
+		return $this->cachePrefix = $cachePrefix;
+
+		return $this;
+	}
+
+	protected function getCachePrefix(): string
+	{
+		return $this->cachePrefix;
 	}
 }
