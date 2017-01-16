@@ -154,7 +154,8 @@ class JsonDataProvider extends \yii\base\Object
 		array $params = []
 	): array
 	{
-		$key = $method
+		$key = $this->getCachePrefix()
+			. $method
 			. $path
 			. http_build_query($query, '', '&', PHP_QUERY_RFC3986); 
 		if (!$this->getCache()->exists($key)) {
