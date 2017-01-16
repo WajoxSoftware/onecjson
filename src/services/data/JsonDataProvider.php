@@ -52,17 +52,17 @@ class JsonDataProvider extends \yii\base\Object
 		return (int) json_decode($response->getBody());
 	}
 
-	public function get(string $path, array $query = [], boolean $cache = true): array
+	public function get(string $path, array $query = [], bool $cache = true): array
 	{
 		return $this->request(self::METHOD_GET, $path, $query, $cache);
 	}
 
-	public function post(string $path, array $query = [], array $params = [], boolean $cache = false): array
+	public function post(string $path, array $query = [], array $params = [], bool $cache = false): array
 	{
 		return $this->request(self::METHOD_POST, $path, $query, $params, $cache);
 	}
 
-	public function patch(string $path, array $query = [], array $params = [], boolean $cache = false)
+	public function patch(string $path, array $query = [], array $params = [], bool $cache = false)
 	{
 		return $this->request(self::METHOD_PATCH, $path, $query, $params, $cache);
 	}
@@ -72,7 +72,7 @@ class JsonDataProvider extends \yii\base\Object
 		return $this->request(self::METHOD_PUT, $path, $query, $params);
 	}
 	
-	public function delete(string $path, array $query = [], boolean $cache = false): array
+	public function delete(string $path, array $query = [], bool $cache = false): array
 	{
 		return $this->request(self::METHOD_DELETE, $path, $query, $cache);
 	}
@@ -125,7 +125,7 @@ class JsonDataProvider extends \yii\base\Object
 		string $path,
 		array $query = [],
 		array $params = [],
-		boolean $cache = false
+		bool $cache = false
 	): array
 	{
 		if ($cache
@@ -197,14 +197,14 @@ class JsonDataProvider extends \yii\base\Object
 		return json_decode($response->getBody(), true);
 	}
 
-	protected function setEnableCache(boolean $enableCache): JsonDataProvider
+	protected function setEnableCache(bool $enableCache): JsonDataProvider
 	{
 		$this->enableCache = $enableCache;
 
 		return $this;
 	}
 
-	protected function isCacheEnabled(): boolean
+	protected function isCacheEnabled(): bool
 	{
 		return $this->enableCache;
 	}
