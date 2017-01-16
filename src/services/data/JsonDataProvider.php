@@ -54,7 +54,7 @@ class JsonDataProvider extends \yii\base\Object
 
 	public function get(string $path, array $query = [], bool $cache = true): array
 	{
-		return $this->request(self::METHOD_GET, $path, $query, $cache);
+		return $this->request(self::METHOD_GET, $path, $query, [], $cache);
 	}
 
 	public function post(string $path, array $query = [], array $params = [], bool $cache = false): array
@@ -62,19 +62,19 @@ class JsonDataProvider extends \yii\base\Object
 		return $this->request(self::METHOD_POST, $path, $query, $params, $cache);
 	}
 
-	public function patch(string $path, array $query = [], array $params = [], bool $cache = false)
+	public function patch(string $path, array $query = [], array $params = [])
 	{
-		return $this->request(self::METHOD_PATCH, $path, $query, $params, $cache);
+		return $this->request(self::METHOD_PATCH, $path, $query, $params, false);
 	}
 
 	public function put(string $path, array $query = [], array $params = []): array
 	{
-		return $this->request(self::METHOD_PUT, $path, $query, $params);
+		return $this->request(self::METHOD_PUT, $path, $query, $params, false);
 	}
 	
-	public function delete(string $path, array $query = [], bool $cache = false): array
+	public function delete(string $path, array $query = []): array
 	{
-		return $this->request(self::METHOD_DELETE, $path, $query, $cache);
+		return $this->request(self::METHOD_DELETE, $path, $query, false);
 	}
 
 	protected function setHost(string $host): JsonDataProvider
