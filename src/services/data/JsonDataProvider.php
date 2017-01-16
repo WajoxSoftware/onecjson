@@ -188,7 +188,7 @@ class JsonDataProvider extends \yii\base\Object
         $response = $this->getClient()->request(
             $method,
             $path . '/?' . $queryString,
-            ['form_params' => $params]
+            $params
         );
 
         return json_decode($response->getBody(), true);
