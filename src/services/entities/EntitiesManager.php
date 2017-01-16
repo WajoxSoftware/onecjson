@@ -98,7 +98,7 @@ class EntitiesManager extends \yii\base\Object
 		return $this;
 	}
 
-	protected function getRestAdapter(): JsonDataProvider
+	public function getRestAdapter(): JsonDataProvider
 	{
 		return $this->restAdapter;
 	}
