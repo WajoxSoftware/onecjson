@@ -209,14 +209,14 @@ class JsonDataProvider extends \yii\base\Object
 		return $this->enableCache;
 	}
 
-	protected function setCacheTime(integer $cacheTime): JsonDataProvider
+	protected function setCacheTime(int $cacheTime): JsonDataProvider
 	{
 		$this->cacheTime = $cacheTime;
 
 		return $this;
 	}
 
-	protected function getCacheTime(): integer
+	protected function getCacheTime(): int
 	{
 		return $this->cacheTime;
 	}
