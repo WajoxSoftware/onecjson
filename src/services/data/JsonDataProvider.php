@@ -191,7 +191,7 @@ class JsonDataProvider extends \yii\base\Object
             $params
         );
 
-        return json_decode($response->getBody(), true);
+        return (array) json_decode($response->getBody(), true);
     }
 
     protected function setEnableCache(bool $enableCache): JsonDataProvider
