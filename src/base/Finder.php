@@ -75,7 +75,7 @@ class Finder extends \yii\base\Object
         return $this;
     }
 
-    public function one(): EntityAbstract
+    public function one()
     {
         $this->limit(1);
 
