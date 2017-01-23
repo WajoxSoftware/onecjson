@@ -5,7 +5,7 @@ class EntityRelation extends \yii\base\Object
 {
     protected $attributes;
 
-    public function setAttributes(array $attributes): EntityAbstract
+    public function setAttributes(array $attributes): EntityRelation
     {
         $this->attributes = $attributes;
 
@@ -24,7 +24,7 @@ class EntityRelation extends \yii\base\Object
         }
     }
 
-    public function setAttribute(string $name, $value)
+    public function setAttribute(string $name, $value): EntityRelation
     {
         $this->attributes[$name] = $value;
 
