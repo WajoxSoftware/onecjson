@@ -3,6 +3,7 @@ namespace wajox\onecjson\services\entities;
 
 use wajox\onecjson\base\Finder;
 use wajox\onecjson\base\EntityAbstract;
+use wajox\onecjson\base\EntityRelation;
 use wajox\onecjson\services\data\JsonDataProvider;
 
 class EntitiesManager extends \yii\base\Object
@@ -48,8 +49,9 @@ class EntitiesManager extends \yii\base\Object
         return $this->getRestAdapter()->count($path, $query);
     }
 
-    public function getRelation(EntityAbstract $entityObject, string $relationAttribute, string $relactionClass): EntityAbstract
+    public function getRelation(EntityAbstract $entityObject, string $relationAttribute, string $relactionClass = ''): EntityRelation
     {
+        $relactionClass = empty($relactionClass) ? EntityRelation::className() : $relactionClass;
         $path = $entityObject->getAttribute($relationAttribute);
 
         $entity = \Yii::createObject($relactionClass);

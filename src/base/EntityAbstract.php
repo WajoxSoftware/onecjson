@@ -1,10 +1,9 @@
 <?php
 namespace wajox\onecjson\base;
 
-abstract class EntityAbstract extends \yii\base\Object
+abstract class EntityAbstract extends EntityRelation
 {
     protected $isNew = true;
-    protected $attributes;
 
     abstract public function getRestIdAttribute(): string;
     abstract public function getRestResourcePath(string $id): string;
@@ -25,37 +24,6 @@ abstract class EntityAbstract extends \yii\base\Object
         $this->isNew = $isNew;
 
         return $this;
-    }
-
-    public function setAttributes(array $attributes): EntityAbstract
-    {
-        $this->attributes = $attributes;
-
-        return $this;
-    }
-
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    public function getAttribute(string $name)
-    {
-        if (isset($this->attributes[$name])) {
-            return $this->attributes[$name];
-        }
-    }
-
-    public function setAttribute(string $name, $value)
-    {
-        $this->attributes[$name] = $value;
-
-        return $this;
-    }
-
-    public function getJson(): string
-    {
-        return json_encode($this->getAttributes());
     }
 /*
     public function loadTranslitJson(string $json): EntityAbstract
