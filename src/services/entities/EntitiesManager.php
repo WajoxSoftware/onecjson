@@ -57,13 +57,19 @@ class EntitiesManager extends \yii\base\Object
             return [];
         }
 
+        $items = $json['value'];
+
+        if (isset($items['RecordSet'])) {
+            $items = $items['RecordSet'];
+        }
+
         return array_map(
             function ($attributes) use ($className) {
                 return \Yii::createObject($className)
                     ->setAttributes($attributes)
                     ->setIsNew(false);
             },
-            $json['value']
+            $items
         );
     }
 
