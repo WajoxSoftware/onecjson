@@ -48,6 +48,19 @@ class EntitiesManager extends \yii\base\Object
         return $this->getRestAdapter()->count($path, $query);
     }
 
+    public function getRelation(EntityAbstract $entityObject, string $relationAttribute, string $relactionClass): EntityAbstract
+    {
+        $path = $entityObject->getAttribute($relationAttribute);
+
+        $entity = \Yii::createObject($relactionClass);
+
+        $json = $this->getRestAdapter()->get($path);
+
+        $entity->setAttributes($json);
+
+        return $entity;
+    }
+
     public function all(string $className, array $query = []): array
     {
         $path = \Yii::createObject($className)->getRestResourcesPath();
