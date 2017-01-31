@@ -55,9 +55,10 @@ class EntitiesManager extends \yii\base\Object
 
         $entity = \Yii::createObject(EntityRelation::className());
 
-        $json = $this->getRestAdapter()->get($path);
-
-        $entity->setAttributes($json);
+        if (!empty($path)) {
+            $json = $this->getRestAdapter()->get($path);
+            $entity->setAttributes($json);         
+        }
 
         return $entity;
     }
