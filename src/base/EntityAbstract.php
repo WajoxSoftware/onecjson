@@ -5,21 +5,21 @@ abstract class EntityAbstract extends EntityRelation
 {
     protected $isNew = true;
 
-    abstract public function getRestIdAttribute(): string;
-    abstract public function getRestResourcePath(string $id): string;
-    abstract public function getRestResourcesPath(): string;
+    abstract public function getRestIdAttribute();
+    abstract public function getRestResourcePath($id);
+    abstract public function getRestResourcesPath();
 
-    public function getRestId(): string
+    public function getRestId()
     {
         return $this->getAttribute($this->getRestIdAttribute());
     }
 
-    public function getIsNew(): bool
+    public function getIsNew()
     {
         return $this->isNew;
     }
 
-    public function setIsNew(bool $isNew): EntityAbstract
+    public function setIsNew($isNew)
     {
         $this->isNew = $isNew;
 

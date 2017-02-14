@@ -15,35 +15,35 @@ class Finder extends \yii\base\Object
     protected $limit;
     protected $offset;
 
-    public function __construct(EntitiesManager $manager, string $resource)
+    public function __construct($manager, $resource)
     {
         $this->setManager($manager)
              ->setResource($resource)
              ->initFilter();
     }
 
-    public function select(array $columns): Finder
+    public function select($columns)
     {
         $this->setSelect($columns);
 
         return $this;
     }
 
-    public function orderBy(array $order): Finder
+    public function orderBy($order)
     {
         $this->setOrder($order);
 
         return $this;
     }
 
-    public function with(array $with): Finder
+    public function with($with)
     {
         $this->setWith($with);
 
         return $this;
     }
 
-    public function limit(int $limit, int $offset = 0): Finder
+    public function limit($limit, $offset = 0)
     {
         $this->setLimit($limit)
              ->setOffset($offset);
@@ -51,7 +51,7 @@ class Finder extends \yii\base\Object
         return $this;
     }
 
-    public function where($where): Finder
+    public function where($where)
     {
         $this->getFilter()
              ->where($where);
@@ -59,7 +59,7 @@ class Finder extends \yii\base\Object
         return $this;
     }
 
-    public function orWhere($where): Finder
+    public function orWhere($where)
     {
         $this->getFilter()
              ->orWhere($where);
@@ -67,7 +67,7 @@ class Finder extends \yii\base\Object
         return $this;
     }
 
-    public function andWhere($where): Finder
+    public function andWhere($where)
     {
         $this->getFilter()
              ->andWhere($where);
@@ -87,7 +87,7 @@ class Finder extends \yii\base\Object
         return array_shift($results);
     }
 
-    public function all(): array
+    public function all()
     {
         return $this->getManager()->all(
             $this->getResource(),
@@ -95,7 +95,7 @@ class Finder extends \yii\base\Object
         );
     }
 
-    public function count(): int
+    public function count()
     {
         return $this->getManager()->count(
             $this->getResource(),
@@ -103,31 +103,31 @@ class Finder extends \yii\base\Object
         );
     }
 
-    protected function setManager(EntitiesManager $manager): Finder
+    protected function setManager($manager)
     {
         $this->manager = $manager;
 
         return $this;
     }
 
-    protected function getManager(): EntitiesManager
+    protected function getManager()
     {
         return $this->manager;
     }
 
-    protected function setResource(string $resource): Finder
+    protected function setResource($resource)
     {
         $this->resource = $resource;
 
         return $this;
     }
 
-    protected function getResource(): string
+    protected function getResource()
     {
         return $this->resource;
     }
 
-    protected function getQueryParams(): array
+    protected function getQueryParams()
     {
         $params = [
             '$filter' => $this->getFilterString(),
@@ -143,7 +143,7 @@ class Finder extends \yii\base\Object
         return $params;
     }
 
-    protected function initFilter(): Finder
+    protected function initFilter()
     {
         $this->setFilter(
             \Yii::createObject(
@@ -154,79 +154,79 @@ class Finder extends \yii\base\Object
         return $this;
     }
 
-    protected function setFilter(EntityFilter $filter): Finder
+    protected function setFilter($filter)
     {
         $this->filter = $filter;
 
         return $this;
     }
 
-    protected function getFilter(): EntityFilter
+    protected function getFilter()
     {
         return $this->filter;
     }
 
-    protected function setLimit(int $limit): Finder
+    protected function setLimit($limit)
     {
         $this->limit = $limit;
         
         return $this;
     }
 
-    protected function setOffset(int $offset): Finder
+    protected function setOffset($offset)
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    protected function setSelect(array $select): Finder
+    protected function setSelect($select)
     {
         $this->select = $select;
 
         return $this;
     }
 
-    protected function setOrderBy(array $order): Finder
+    protected function setOrderBy($order)
     {
         $this->order = $order;
 
         return $this;
     }
 
-    protected function setWith(array $with): Finder
+    protected function setWith($with)
     {
         $this->with = $with;
 
         return $this;
     }
 
-    protected function getFilterString(): string
+    protected function getFilterString()
     {
         return $this->getFilter()->getExpressionsString();
     }
 
-    protected function getSelectString(): string
+    protected function getSelectString()
     {
         return implode(', ', $this->select);
     }
 
-    protected function getExpandString(): string
+    protected function getExpandString()
     {
         return implode(', ', $this->with);
     }
 
-    protected function getOrderByString(): string
+    protected function getOrderByString()
     {
         return implode(', ', $this->order);
     }
 
-    protected function getTopString(): string
+    protected function getTopString()
     {
         return (string) $this->limit;
     }
 
-    protected function getSkipString(): string
+    protected function getSkipString()
     {
         return (string) $this->offset;
     }

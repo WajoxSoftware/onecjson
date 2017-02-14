@@ -8,12 +8,12 @@ class EntityFilter extends \yii\base\Object
 
     protected $expressions;
 
-    public function getExpressionsString(): string
+    public function getExpressionsString()
     {
         return implode(' ', $this->getExpressions());
     }
 
-    public function getExpressions(): array
+    public function getExpressions()
     {
         $resultExp = [];
         foreach ($this->expressions as $value) {
@@ -39,17 +39,17 @@ class EntityFilter extends \yii\base\Object
         return $this;
     }
 
-    public function andWhere($filter): EntityFilter
+    public function andWhere($filter)
     {
         return $this->where($filter, self::GLUE_AND);
     }
 
-    public function orWhere($filter): EntityFilter
+    public function orWhere($filter)
     {
         return $this->where($filter, self::GLUE_OR);
     }
 
-    protected function addFilter(string $glue, string $expression): EntityFilter
+    protected function addFilter($glue, $expression)
     {
         if ($this->hasExpressions()) {
             $this->addExpression($glue);
@@ -58,19 +58,19 @@ class EntityFilter extends \yii\base\Object
         return $this->addExpression($expression);
     }
 
-    protected function hasExpressions(): bool
+    protected function hasExpressions()
     {
         return count($this->expressions) > 0;
     }
 
-    protected function addExpression(string $expression): EntityFilter
+    protected function addExpression($expression)
     {
         $this->expressions[] = $expression;
 
         return $this;
     }
 
-    protected function parseExpression($filter): string
+    protected function parseExpression($filter)
     {
         if (is_string($filter)) {
             return $filter;

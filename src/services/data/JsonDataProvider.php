@@ -20,7 +20,7 @@ class JsonDataProvider extends \yii\base\Object
     protected $cacheTime = null;
     protected $cachePrefix = '';
 
-    public function __construct(array $params = [])
+    public function __construct($params = [])
     {
         $this->setHost($params['host'])
              ->setUser($params['user'])
@@ -31,10 +31,10 @@ class JsonDataProvider extends \yii\base\Object
     }
 
     public function count(
-        string $path,
-        array $query = [],
-        array $params = []
-    ): int {
+        $path,
+        $query = [],
+        $params = []
+    ) {
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
         $params['auth'] = [
@@ -51,68 +51,68 @@ class JsonDataProvider extends \yii\base\Object
         return (int) json_decode($response->getBody());
     }
 
-    public function get(string $path, array $query = [], bool $cache = true): array
+    public function get($path, $query = [], $cache = true)
     {
         return $this->request(self::METHOD_GET, $path, $query, [], $cache);
     }
 
-    public function post(string $path, array $query = [], array $params = [], bool $cache = false): array
+    public function post($path, $query = [], $params = [], $cache = false)
     {
         return $this->request(self::METHOD_POST, $path, $query, $params, $cache);
     }
 
-    public function patch(string $path, array $query = [], array $params = [])
+    public function patch($path, $query = [], $params = [])
     {
         return $this->request(self::METHOD_PATCH, $path, $query, $params, false);
     }
 
-    public function put(string $path, array $query = [], array $params = []): array
+    public function put($path, $query = [], $params = [])
     {
         return $this->request(self::METHOD_PUT, $path, $query, $params, false);
     }
     
-    public function delete(string $path, array $query = []): array
+    public function delete($path, $query = [])
     {
         return $this->request(self::METHOD_DELETE, $path, $query, false);
     }
 
-    protected function setHost(string $host): JsonDataProvider
+    protected function setHost($host)
     {
         $this->host = $host;
 
         return $this;
     }
 
-    protected function getHost(): string
+    protected function getHost()
     {
         return $this->host;
     }
 
-    protected function setUser(string $user): JsonDataProvider
+    protected function setUser($user)
     {
         $this->user = $user;
 
         return $this;
     }
 
-    protected function getUser(): string
+    protected function getUser()
     {
         return $this->user;
     }
 
-    protected function setPassword(string $password): JsonDataProvider
+    protected function setPassword($password)
     {
         $this->password = $password;
 
         return $this;
     }
 
-    protected function getPassword(): string
+    protected function getPassword()
     {
         return $this->password;
     }
 
-    public function getClient(): Client
+    public function getClient()
     {
         return new Client([
             'base_uri' => $this->getHost(),
@@ -120,12 +120,12 @@ class JsonDataProvider extends \yii\base\Object
     }
 
     protected function request(
-        string $method,
-        string $path,
-        array $query = [],
-        array $params = [],
-        bool $cache = false
-    ): array {
+        $method,
+        $path,
+        $query = [],
+        $params = [],
+        $cache = false
+    ) {
         if ($cache
             && $this->isCacheEnabled()
         ) {
@@ -146,11 +146,11 @@ class JsonDataProvider extends \yii\base\Object
     }
 
     protected function requestCachedJson(
-        string $method,
-        string $path,
-        array $query = [],
-        array $params = []
-    ): array {
+        $method,
+        $path,
+        $query = [],
+        $params = []
+    ) {
         $key = $this->getCache()->buildKey([
             $this->getCachePrefix(),
             $method,
@@ -171,11 +171,11 @@ class JsonDataProvider extends \yii\base\Object
     }
 
     protected function requestJson(
-        string $method,
-        string $path,
-        array $query = [],
-        array $params = []
-    ): array {
+        $method,
+        $path,
+        $query = [],
+        $params = []
+    ) {
         $query['$format'] = self::FORMAT_JSON;
 
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
@@ -194,43 +194,43 @@ class JsonDataProvider extends \yii\base\Object
         return (array) json_decode($response->getBody(), true);
     }
 
-    protected function setEnableCache(bool $enableCache): JsonDataProvider
+    protected function setEnableCache($enableCache)
     {
         $this->enableCache = $enableCache;
 
         return $this;
     }
 
-    protected function isCacheEnabled(): bool
+    protected function isCacheEnabled()
     {
         return $this->enableCache;
     }
 
-    protected function setCacheTime(int $cacheTime): JsonDataProvider
+    protected function setCacheTime($cacheTime)
     {
         $this->cacheTime = $cacheTime;
 
         return $this;
     }
 
-    protected function getCacheTime(): int
+    protected function getCacheTime()
     {
         return $this->cacheTime;
     }
 
-    protected function getCache(): \yii\caching\Cache
+    protected function getCache()
     {
         return \Yii::$app->cache;
     }
 
-    protected function setCachePrefix(string $cachePrefix): JsonDataProvider
+    protected function setCachePrefix($cachePrefix)
     {
         $this->cachePrefix = $cachePrefix;
 
         return $this;
     }
 
-    protected function getCachePrefix(): string
+    protected function getCachePrefix()
     {
         return $this->cachePrefix;
     }

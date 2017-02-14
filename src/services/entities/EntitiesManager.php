@@ -10,7 +10,7 @@ class EntitiesManager extends \yii\base\Object
 {
     protected $restAdapter;
 
-    public function __construct(array $params = [])
+    public function __construct($params = [])
     {
         $this
             ->initAdapter(
@@ -19,7 +19,7 @@ class EntitiesManager extends \yii\base\Object
             );
     }
 
-    public function one(string $className, string $id)
+    public function one($className, $id)
     {
         $object = \Yii::createObject($className);
         $path = $object->getRestResourcePath($id);
@@ -31,7 +31,7 @@ class EntitiesManager extends \yii\base\Object
         return $object;
     }
 
-    public function finder(string $className)
+    public function finder($className)
     {
         $finder = \Yii::createObject(
             Finder::className(),
@@ -41,7 +41,7 @@ class EntitiesManager extends \yii\base\Object
         return $finder;
     }
 
-    public function count(string $className, array $query = []): int
+    public function count($className, $query = [])
     {
         $object = \Yii::createObject($className);
         $path = $object->getRestResourcesPath();
@@ -49,7 +49,7 @@ class EntitiesManager extends \yii\base\Object
         return $this->getRestAdapter()->count($path, $query);
     }
 
-    public function getRelation(EntityAbstract $entityObject, string $relationAttribute): EntityRelation
+    public function getRelation($entityObject, $relationAttribute)
     {
         $path = $entityObject->getAttribute($relationAttribute);
 
@@ -57,13 +57,13 @@ class EntitiesManager extends \yii\base\Object
 
         if (!empty($path)) {
             $json = $this->getRestAdapter()->get($path);
-            $entity->setAttributes($json);         
+            $entity->setAttributes($json);
         }
 
         return $entity;
     }
 
-    public function all(string $className, array $query = []): array
+    public function all($className, $query = [])
     {
         $path = \Yii::createObject($className)->getRestResourcesPath();
 
@@ -88,7 +88,7 @@ class EntitiesManager extends \yii\base\Object
         );
     }
 
-    protected function persist(EntityAbstract $object): EntityAbstract
+    protected function persist($object)
     {
         $params = ['json' => $object->getJson()];
         $path = $object->getRestResourcesPath();
@@ -112,19 +112,19 @@ class EntitiesManager extends \yii\base\Object
             ->setIsNew(false);
     }
 
-    protected function setRestAdapter(JsonDataProvider $restAdapter): EntitiesManager
+    protected function setRestAdapter($restAdapter)
     {
         $this->restAdapter = $restAdapter;
 
         return $this;
     }
 
-    public function getRestAdapter(): JsonDataProvider
+    public function getRestAdapter()
     {
         return $this->restAdapter;
     }
 
-    protected function initAdapter(string $adapterClass, array $adapterConfig): EntitiesManager
+    protected function initAdapter($adapterClass, $adapterConfig)
     {
         $adapterObject = \Yii::createObject(
             $adapterClass,
