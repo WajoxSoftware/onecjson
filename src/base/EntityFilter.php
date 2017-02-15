@@ -29,8 +29,8 @@ class EntityFilter extends \yii\base\Object
 
     public function where(
         $filter,
-        string $glue = self::GLUE_AND
-    ): EntityFilter {
+        $glue = self::GLUE_AND
+    ) {
         $this->addFilter(
             $glue,
             $this->parseExpression($filter)
