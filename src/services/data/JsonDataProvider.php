@@ -42,10 +42,7 @@ class JsonDataProvider extends \yii\base\Object
     ) {
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
-        $params['auth'] = [
-            $this->getUser(),
-            $this->getPassword(),
-        ];
+        $params = $this->addAuthParams($params);
 
         $response = $this->getClient()->request(
             self::METHOD_GET,
@@ -207,25 +204,7 @@ class JsonDataProvider extends \yii\base\Object
 
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
-        if ($this->isBasicAuth()) {
-            $params['auth'] = [
-                $this->getUser(),
-                $this->getPassword(),
-            ];
-        }
-
-        if ($this->isNtlmAuth()) {
-            $authParams = [
-                $this->getUser(),
-                $this->getPassword(),
-            ];
-
-            $params['curl'] = [
-                CURLOPT_HTTPAUTH => CURLAUTH_NTLM,
-                CURLOPT_USERPWD  => implode(':', $authParams),
-            ];
-        }
-
+        $params = $this->addAuthParams($params);
 
         $response = $this->getClient()->request(
             $method,
@@ -275,5 +254,29 @@ class JsonDataProvider extends \yii\base\Object
     protected function getCachePrefix()
     {
         return $this->cachePrefix;
+    }
+
+    protected function addAuthParams($params)
+    {
+        if ($this->isBasicAuth()) {
+            $params['auth'] = [
+                $this->getUser(),
+                $this->getPassword(),
+            ];
+        }
+
+        if ($this->isNtlmAuth()) {
+            $authParams = [
+                $this->getUser(),
+                $this->getPassword(),
+            ];
+
+            $params['curl'] = [
+                CURLOPT_HTTPAUTH => CURLAUTH_NTLM,
+                CURLOPT_USERPWD  => implode(':', $authParams),
+            ];
+        }
+
+        return $params;
     }
 }
