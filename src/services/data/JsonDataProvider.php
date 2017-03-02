@@ -5,6 +5,9 @@ use GuzzleHttp\Client;
 
 class JsonDataProvider extends \yii\base\Object
 {
+    const AUTH_TYPE_BASIC = 'basic';
+    const AUTH_TYPE_NTLM = 'ntlm';
+
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
     const METHOD_PUT = 'PUT';
@@ -19,6 +22,7 @@ class JsonDataProvider extends \yii\base\Object
     protected $enableCache;
     protected $cacheTime = null;
     protected $cachePrefix = '';
+    protected $authType = null;
 
     public function __construct($params = [])
     {
@@ -27,7 +31,8 @@ class JsonDataProvider extends \yii\base\Object
              ->setPassword($params['password'])
              ->setEnableCache($params['enableCache'])
              ->setCacheTime($params['cacheTime'])
-             ->setCachePrefix($params['cachePrefix']);
+             ->setCachePrefix($params['cachePrefix'])
+             ->setAuthType($params['authType']);
     }
 
     public function count(
@@ -119,6 +124,28 @@ class JsonDataProvider extends \yii\base\Object
         ]);
     }
 
+    protected function setAuthType($authType)
+    {
+        $this->authType = $authType;
+
+        return $this;
+    }
+
+    protected function getAuthType()
+    {
+        return $this->authType;
+    }
+
+    protected function isBasicAuth()
+    {
+        return $this->authType == self::AUTH_TYPE_BASIC;
+    }
+
+    protected function isNtlmAuth()
+    {
+        return $this->authType == self::AUTH_TYPE_NTLM;
+    }
+
     protected function request(
         $method,
         $path,
@@ -180,10 +207,25 @@ class JsonDataProvider extends \yii\base\Object
 
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
-        $params['auth'] = [
-            $this->getUser(),
-            $this->getPassword(),
-        ];
+        if ($this->isBasicAuth()) {
+            $params['auth'] = [
+                $this->getUser(),
+                $this->getPassword(),
+            ];
+        }
+
+        if ($this->isNtlmAuth()) {
+            $authParams = [
+                $this->getUser(),
+                $this->getPassword(),
+            ];
+
+            $params['curl'] = [
+                CURLOPT_HTTPAUTH => CURLAUTH_NTLM,
+                CURLOPT_USERPWD  => implode(':', $authParams),
+            ];
+        }
+
 
         $response = $this->getClient()->request(
             $method,
