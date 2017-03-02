@@ -5,6 +5,9 @@ use GuzzleHttp\Client;
 
 class JsonDataProvider extends \yii\base\Object
 {
+    const AUTH_TYPE_BASIC = 'basic';
+    const AUTH_TYPE_NTLM = 'ntlm';
+
     const METHOD_GET = 'GET';
     const METHOD_POST = 'POST';
     const METHOD_PUT = 'PUT';
@@ -19,6 +22,7 @@ class JsonDataProvider extends \yii\base\Object
     protected $enableCache;
     protected $cacheTime = null;
     protected $cachePrefix = '';
+    protected $authType = null;
 
     public function __construct(array $params = [])
     {
@@ -27,7 +31,8 @@ class JsonDataProvider extends \yii\base\Object
              ->setPassword($params['password'])
              ->setEnableCache($params['enableCache'])
              ->setCacheTime($params['cacheTime'])
-             ->setCachePrefix($params['cachePrefix']);
+             ->setCachePrefix($params['cachePrefix'])
+             ->setAuthType($params['authType']);
     }
 
     public function count(
@@ -37,10 +42,7 @@ class JsonDataProvider extends \yii\base\Object
     ): int {
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
-        $params['auth'] = [
-            $this->getUser(),
-            $this->getPassword(),
-        ];
+        $params = $this->addAuthParams($params);
 
         $response = $this->getClient()->request(
             self::METHOD_GET,
@@ -119,6 +121,28 @@ class JsonDataProvider extends \yii\base\Object
         ]);
     }
 
+    protected function setAuthType(string $authType): JsonDataProvider
+    {
+        $this->authType = $authType;
+
+        return $this;
+    }
+
+    protected function getAuthType(): string
+    {
+        return $this->authType;
+    }
+
+    protected function isBasicAuth(): bool
+    {
+        return $this->authType == self::AUTH_TYPE_BASIC;
+    }
+
+    protected function isNtlmAuth(): bool
+    {
+        return $this->authType == self::AUTH_TYPE_NTLM;
+    }
+
     protected function request(
         string $method,
         string $path,
@@ -180,10 +204,7 @@ class JsonDataProvider extends \yii\base\Object
 
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
-        $params['auth'] = [
-            $this->getUser(),
-            $this->getPassword(),
-        ];
+        $params = $this->addAuthParams($params);
 
         $response = $this->getClient()->request(
             $method,
@@ -233,5 +254,29 @@ class JsonDataProvider extends \yii\base\Object
     protected function getCachePrefix(): string
     {
         return $this->cachePrefix;
+    }
+
+    protected function addAuthParams(array $params): array
+    {
+        if ($this->isBasicAuth()) {
+            $params['auth'] = [
+                $this->getUser(),
+                $this->getPassword(),
+            ];
+        }
+
+        if ($this->isNtlmAuth()) {
+            $authParams = [
+                $this->getUser(),
+                $this->getPassword(),
+            ];
+
+            $params['curl'] = [
+                CURLOPT_HTTPAUTH => CURLAUTH_NTLM,
+                CURLOPT_USERPWD  => implode(':', $authParams),
+            ];
+        }
+
+        return $params;
     }
 }
