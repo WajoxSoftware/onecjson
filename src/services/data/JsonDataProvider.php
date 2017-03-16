@@ -258,6 +258,8 @@ class JsonDataProvider extends \yii\base\Object
 
     protected function addAuthParams(array $params): array
     {
+        $params['verify'] = false;
+    
         if ($this->isBasicAuth()) {
             $params['auth'] = [
                 $this->getUser(),
