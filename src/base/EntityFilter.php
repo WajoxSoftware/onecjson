@@ -3,10 +3,10 @@ namespace wajox\onecjson\base;
 
 class EntityFilter extends \yii\base\Object
 {
-    const GLUE_AND = 'And';
-    const GLUE_OR = 'Or';
+    const GLUE_AND = 'and';
+    const GLUE_OR = 'or';
 
-    protected $expressions;
+    protected $expressions = [];
 
     public function getExpressionsString(): string
     {
