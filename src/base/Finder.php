@@ -31,7 +31,7 @@ class Finder extends \yii\base\Object
 
     public function orderBy($order)
     {
-        $this->setOrder($order);
+        $this->setOrderBy($order);
 
         return $this;
     }
