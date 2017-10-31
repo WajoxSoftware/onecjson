@@ -25,29 +25,29 @@ abstract class EntityAbstract extends EntityRelation
 
         return $this;
     }
-/*
-    public function loadTranslitJson(string $json): EntityAbstract
-    {
-        foreach ($json as $key => $value) {
-            if (($name = $this->getRestAttributeMap()) === null) {
-                continue;
+    /*
+        public function loadTranslitJson(string $json): EntityAbstract
+        {
+            foreach ($json as $key => $value) {
+                if (($name = $this->getRestAttributeMap()) === null) {
+                    continue;
+                }
+    
+                $this->setAttribute($name, $value);
             }
-
-            $this->setAttribute($name, $value);
+    
+            return $this;
         }
-
-        return $this;
-    }
-
-    public function getTranslitJson(): string
-    {
-        $data = [];
-
-        foreach ($this->getAttributes() as $name => $value) {
-            $key = TextHelper::translit($name);
-            $data[$key] = $value;
-        }
-
-        return json_encode($data);
-    }*/
+    
+        public function getTranslitJson(): string
+        {
+            $data = [];
+    
+            foreach ($this->getAttributes() as $name => $value) {
+                $key = TextHelper::translit($name);
+                $data[$key] = $value;
+            }
+    
+            return json_encode($data);
+        }*/
 }

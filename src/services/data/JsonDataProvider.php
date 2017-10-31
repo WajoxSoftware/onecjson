@@ -38,7 +38,8 @@ class JsonDataProvider extends \yii\base\Object
     public function count(
         string $path,
         array $query = [],
-        array $params = []
+        array $params = [],
+        bool $cache = false
     ): int {
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
@@ -47,7 +48,8 @@ class JsonDataProvider extends \yii\base\Object
         $response = $this->getClient()->request(
             self::METHOD_GET,
             $path . '/$count/?' . $queryString,
-            $params
+            $params,
+            $cache
         );
 
         return (int) json_decode($response->getBody());

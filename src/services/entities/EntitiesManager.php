@@ -19,11 +19,11 @@ class EntitiesManager extends \yii\base\Object
             );
     }
 
-    public function one(string $className, string $id)
+    public function one(string $className, string $id, bool $cache = false)
     {
         $object = \Yii::createObject($className);
         $path = $object->getRestResourcePath($id);
-        $json = $this->getRestAdapter()->get($path);
+        $json = $this->getRestAdapter()->get($path, [], $cache);
 
         $object->setAttributes($json)
                ->setIsNew(false);
@@ -41,33 +41,36 @@ class EntitiesManager extends \yii\base\Object
         return $finder;
     }
 
-    public function count(string $className, array $query = []): int
+    public function count(string $className, array $query = [], bool $cache = false): int
     {
         $object = \Yii::createObject($className);
         $path = $object->getRestResourcesPath();
 
-        return $this->getRestAdapter()->count($path, $query);
+        return $this->getRestAdapter()->count($path, $query, [], $cache);
     }
 
-    public function getRelation(EntityAbstract $entityObject, string $relationAttribute): EntityRelation
+    public function getRelation(EntityAbstract $entityObject, string $relationAttribute, bool $cache = false): EntityRelation
     {
         $path = $entityObject->getAttribute($relationAttribute);
 
         $entity = \Yii::createObject(EntityRelation::className());
 
         if (!empty($path)) {
-            $json = $this->getRestAdapter()->get($path);
-            $entity->setAttributes($json);         
+            $json = $this->getRestAdapter()->get($path, [], $cache);
+            $entity->setAttributes($json);
         }
 
         return $entity;
     }
 
-    public function all(string $className, array $query = []): array
-    {
+    public function all(
+        string $className,
+        array $query = [],
+        bool $cache = false
+    ): array {
         $path = \Yii::createObject($className)->getRestResourcesPath();
 
-        $json = $this->getRestAdapter()->get($path, $query);
+        $json = $this->getRestAdapter()->get($path, $query, $cache);
         if (sizeof($json['value']) == 0) {
             return [];
         }

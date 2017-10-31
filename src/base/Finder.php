@@ -75,31 +75,34 @@ class Finder extends \yii\base\Object
         return $this;
     }
 
-    public function one()
+    public function one(bool $cache = false)
     {
         $this->limit(1);
 
         $results = $this->getManager()->all(
             $this->getResource(),
-            $this->getQueryParams()
+            $this->getQueryParams(),
+            $cache
         );
 
         return array_shift($results);
     }
 
-    public function all(): array
+    public function all(bool $cache = false): array
     {
         return $this->getManager()->all(
             $this->getResource(),
-            $this->getQueryParams()
+            $this->getQueryParams(),
+            $cache
         );
     }
 
-    public function count(): int
+    public function count(bool $cache = false): int
     {
         return $this->getManager()->count(
             $this->getResource(),
-            $this->getQueryParams()
+            $this->getQueryParams(),
+            $cache
         );
     }
 
